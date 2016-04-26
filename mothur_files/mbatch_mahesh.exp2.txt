@@ -1,0 +1,71 @@
+## Analysis of Mahesh's new data (including citro2bacter) with re-sequenced prelim files:
+#8.24.15
+
+#make.contigs(file=citro2.files, processors=10)
+#summary.seqs(fasta=citro2.trim.contigs.fasta, processors=10)
+#screen.seqs(fasta=citro2.trim.contigs.fasta, group=citro2.contigs.groups, maxambig=0, maxlength=275, processors=10)
+#unique.seqs(fasta=citro2.trim.contigs.good.fasta)
+#count.seqs(name=citro2.trim.contigs.good.names, group=citro2.contigs.good.groups)
+#summary.seqs(count=citro2.trim.contigs.good.count_table, processors=10)
+
+#align.seqs(fasta=citro2.trim.contigs.good.unique.fasta, reference=Mahesh_15_species.ng.align, processors=10)
+#summary.seqs(fasta=citro2.trim.contigs.good.unique.align, count=citro2.trim.contigs.good.count_table, processors=10)
+#screen.seqs(fasta=citro2.trim.contigs.good.unique.align, count=citro2.trim.contigs.good.count_table, summary=citro2.trim.contigs.good.unique.summary, start=13862, end=23444, maxhomop=8, processors=10)
+#summary.seqs(fasta=current, count=current, processors=10)
+#filter.seqs(fasta=citro2.trim.contigs.good.unique.good.align, vertical=T, trump=., processors=10)
+#unique.seqs(fasta=citro2.trim.contigs.good.unique.good.filter.fasta, count=citro2.trim.contigs.good.good.count_table)
+#pre.cluster(fasta=citro2.trim.contigs.good.unique.good.filter.unique.fasta, count=citro2.trim.contigs.good.unique.good.filter.count_table, diffs=2, processors=10)
+#chimera.uchime(fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.count_table, dereplicate=t, processors=10)
+#remove.seqs(fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.fasta, accnos=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.accnos)
+#summary.seqs(fasta=current, count=current, processors=10)
+#count.seqs(name=current, group=current)
+#count.groups(count=citro2.trim.contigs.good.count_table)
+
+#remove.groups(count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.count_table, fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, groups=23_Jun_09-25_Jun_03-9_Jul_02-MDp1_Neg-Neg_CP4_1-Neg_CP4_2-Neg_CP4_3-Neg_CP4_4-Neg_CP4_5-Neg_CP5_3-waterB_08052015-waterC-waterD-water_A_08052015-water_D08052015)
+##classify.seqs(fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, reference=Mahesh_15_species.ng.fasta, taxonomy=Mahesh_15_species_taxonomy.txt, cutoff=80)
+	# note: this produces some unclassified Bacteroides, Clostridiales: not recommended for this function. Instead use:
+classify.seqs(fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, reference=Mahesh_15_species.ng.fasta, taxonomy=Mahesh_15_species_taxonomy.txt, cutoff=80, method=knn, numwanted=1)
+	# this classifies your sequences based on one rep sequence chosen for that cluster (?)
+
+
+## if you wanted to do some OTU analysis:
+#dist.seqs(fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, cutoff=0.15, processors=10)
+#cluster(column=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table)
+
+#make.shared(list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, label=0.03)
+#system(mv citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.shared citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.shared)
+#make.shared(list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, label=0.02)
+#system(mv citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.shared citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.shared)
+#make.shared(list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, label=0.01)
+#system(mv citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.shared citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.shared)
+
+#classify.otu(list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, taxonomy=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.Mahesh_15_species_taxonomy.wang.taxonomy, label=0.03)
+#classify.otu(list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, taxonomy=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.Mahesh_15_species_taxonomy.wang.taxonomy, label=0.02)
+#classify.otu(list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=citro2.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, taxonomy=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.Mahesh_15_species_taxonomy.wang.taxonomy, label=0.03)
+
+#get.oturep(column=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, name=citro2.trim.contigs.good.names,  label=0.03)
+#get.oturep(column=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, name=citro2.trim.contigs.good.names,  label=0.02)
+#get.oturep(column=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, list=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, fasta=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, name=citro2.trim.contigs.good.names,  label=0.01)
+
+#dist.shared(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.shared, calc=thetayc-jclass)
+#dist.shared(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.shared, calc=thetayc-jclass)
+#dist.shared(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.shared, calc=thetayc-jclass)
+
+#pcoa(phylip=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.thetayc.0.01.lt.dist)
+#pcoa(phylip=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.thetayc.0.02.lt.dist)
+#pcoa(phylip=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.thetayc.0.03.lt.dist)
+
+#can be done once best option has been chosen
+#nmds(phylip=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.thetayc.0.01.lt.dist, mindim=4, maxdim=4)
+#nmds(phylip=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.thetayc.0.02.lt.dist, mindim=4, maxdim=4)
+#nmds(phylip=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.thetayc.0.03.lt.dist, mindim=4, maxdim=4)       
+
+#for shared distances:
+#summary.shared(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.shared, calc=sharedsobs-braycurtis-spearman-thetayc)
+#summary.shared(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.shared, calc=sharedsobs-braycurtis-spearman-thetayc)
+#summary.shared(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.shared, calc=sharedsobs-braycurtis-spearman-thetayc)
+
+#for diversity metrics (single):
+#summary.single(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.shared, calc=simpsoneven-simpson-invsimpson-shannon-npshannon-sobs-chao-nseqs)
+#summary.single(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.shared, calc=simpsoneven-simpson-invsimpson-shannon-npshannon-sobs-chao-nseqs)
+#summary.single(shared=citro2.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.shared, calc=simpsoneven-simpson-invsimpson-shannon-npshannon-sobs-chao-nseqs)

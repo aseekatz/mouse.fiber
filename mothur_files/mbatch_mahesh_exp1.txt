@@ -1,0 +1,42 @@
+##REPEAT mothur batch for all of mahesh's data:
+#10.28.14
+
+make.contigs(file=martens3.files, processors=10)
+summary.seqs(fasta=martens3.trim.contigs.fasta, processors=10)
+screen.seqs(fasta=martens3.trim.contigs.fasta, group=martens3.contigs.groups, maxambig=0, maxlength=275, processors=10)
+unique.seqs(fasta=martens3.trim.contigs.good.fasta)
+count.seqs(name=martens3.trim.contigs.good.names, group=martens3.contigs.good.groups)
+summary.seqs(count=martens3.trim.contigs.good.count_table, processors=10)
+
+align.seqs(fasta=martens3.trim.contigs.good.unique.fasta, reference=Mahesh_14_species.align, processors=10)
+summary.seqs(fasta=martens3.trim.contigs.good.unique.align, count=martens3.trim.contigs.good.count_table, processors=10)
+screen.seqs(fasta=martens3.trim.contigs.good.unique.align, count=martens3.trim.contigs.good.count_table, summary=martens3.trim.contigs.good.unique.summary, start=13862, end=23444, maxhomop=8, processors=10)
+summary.seqs(fasta=current, count=current, processors=10)
+filter.seqs(fasta=martens3.trim.contigs.good.unique.good.align, vertical=T, trump=., processors=10)
+unique.seqs(fasta=martens3.trim.contigs.good.unique.good.filter.fasta, count=martens3.trim.contigs.good.good.count_table)
+pre.cluster(fasta=martens3.trim.contigs.good.unique.good.filter.unique.fasta, count=martens3.trim.contigs.good.unique.good.filter.count_table, diffs=2, processors=10)
+chimera.uchime(fasta=martens3.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.count_table, dereplicate=t, processors=10)
+remove.seqs(fasta=martens3.trim.contigs.good.unique.good.filter.unique.precluster.fasta, accnos=martens3.trim.contigs.good.unique.good.filter.unique.precluster.uchime.accnos)
+summary.seqs(fasta=current, count=current, processors=10)
+count.groups(name=current, group=current)
+
+remove.groups(count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.count_table, fasta=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, taxonomy=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.Mahesh_14_species_taxonomy.wang.taxonomy, groups=)
+classify.seqs(fasta=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.uchime.pick.pick.count_table, reference=Mahesh_14_species.ng.fasta, taxonomy=Mahesh_14_species_taxonomy.txt, cutoff=80)
+	# most analyses were conducted from the produced phylotype file (classifying to the unique_classifier file)
+
+dist.seqs(fasta=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, cutoff=0.15, processors=10)
+
+# the following commands can be done to look at OTU partitioning:
+cluster(column=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.count_table)
+make.shared(list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.count_table, label=0.03)
+system(mv martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.shared martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.shared)
+make.shared(list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.count_table, label=0.02)
+system(mv martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.shared martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.shared)
+make.shared(list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.count_table, label=0.01)
+system(mv martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.shared martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.shared)
+classify.otu(list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.list, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.count_table, taxonomy=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.Mahesh_14_species_taxonomy.wang.pick.taxonomy, label=0.03)
+classify.otu(list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.list, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.count_table, taxonomy=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.Mahesh_14_species_taxonomy.wang.pick.taxonomy, label=0.02)
+classify.otu(list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.list, count=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.count_table, taxonomy=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.Mahesh_14_species_taxonomy.wang.pick.taxonomy, label=0.01)
+get.oturep(column=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.03.list, fasta=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, name=martens3.trim.contigs.good.names,  label=0.03)
+get.oturep(column=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.02.list, fasta=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, name=martens3.trim.contigs.good.names,  label=0.02)
+get.oturep(column=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, list=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.01.list, fasta=martens3.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, name=martens3.trim.contigs.good.names,  label=0.01)
